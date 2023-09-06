@@ -6,7 +6,7 @@ export default class Record {
       this.idSetInterval;
       this.stream;
       this.recorder;
-      this.popap;
+      this.popup;
       this.videoWindow;
   
       this.panelCheck;
@@ -61,7 +61,7 @@ export default class Record {
       navigator.mediaDevices
         .getUserMedia(constraints)
         .then((stream) => {
-          if (this.popap) this.popap.remove();
+          if (this.popup) this.popup.remove();
           this.stream = stream;
           this.recorder = new MediaRecorder(this.stream);
   
@@ -92,9 +92,9 @@ export default class Record {
     };
   
     messageNotStrim() {
-      const popap = document.createElement("div");
-      popap.textContent = "API недоступно, либо пользователь не выдал прав!";
-      popap.style.cssText = `
+      const popup = document.createElement("div");
+      popup.textContent = "API недоступно, либо пользователь не выдал прав!";
+      popup.style.cssText = `
         font-family:'Arial', sans-serif;
         font-size: 25px;
         text-align: center;
@@ -112,8 +112,8 @@ export default class Record {
         background-color: white;
         z-index: 1000;
       `;
-      document.body.appendChild(popap);
-      this.popap = popap;
+      document.body.appendChild(popup);
+      this.popup = popup;
     }
   
     videoRecordingWindow() {

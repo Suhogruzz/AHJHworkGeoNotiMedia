@@ -59,7 +59,7 @@ export default class Timeline {
               <div class="time">${objectPost.time}</div>
               <div class="geolocation">[${objectPost.geolocation.latitude}, ${objectPost.geolocation.longitude}]</div>
               <div class="geolocation-icon"></div>
-              <div class="ruler-mark"></div>
+              <div class="ruler-dot"></div>
           </li>
       `;
       return html;
