@@ -1,0 +1,250 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 600px;
+    font-family:'Arial', sans-serif;
+    font-size: 20px;
+    color: rgb(62, 57, 57);
+}
+
+.ruler {
+    display: block;
+    position: absolute;
+    width: 1.5%;
+    height: 78%;
+    left: 12%;
+    top: 11.9%;
+    border: 1.5px solid rgb(62, 57, 57);
+    z-index: 998;
+}
+
+.posts {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    list-style: none;
+    width: 73.2%;
+    height: 80.5%;
+    margin: 0;
+    padding-left: 7%;
+    padding-bottom: 2%;
+    left: 10%;
+    top: 5%;
+    overflow-y: auto;
+}
+
+.post {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    width: 95.6%;
+    padding: 2%;
+    border: 1.5px solid rgb(62, 57, 57);
+    border-radius: 15px;
+}
+
+.post:nth-child(n+2) {
+    margin-top: 2%;
+}
+
+.ruler-mark {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    top: 25%;
+    left: -7.7%;
+    border: 1.5px solid rgb(62, 57, 57);
+    border-radius: 50%;
+    background-color: white;
+    z-index: 999;
+}
+
+.content, .audio, .videoblock {
+    width: 78.8%;
+    margin: 0;
+    border-radius: 15px;
+    line-height: 28px;
+}
+
+.video {
+    width: 50%;
+    border-radius: 15px;
+}
+
+.container-video {
+    width: 100%;
+    height: 100%;
+}
+
+.video-window {
+    width: 600px;
+    height: 100%;
+    margin-left: 20%;
+    border-radius: 15px;
+}
+
+.time {
+    font-size: 16px;
+    margin-left: 4.6%;
+}
+
+.geolocation {
+    font-size: 16px;
+    margin-top: 2.5%;
+}
+
+.geolocation-icon {
+    width: 15px;
+    height: 15px;
+    margin-top: 2.8%;
+    margin-left: 1%;
+    background-image: url(../img/geolocation.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.input-panel {
+    position: absolute;
+    top: 90%;
+    left: 10%;
+    display: flex;
+    flex-direction: row;
+    width: 80%;
+    height: 8.5%;
+    border: 1.5px solid rgb(62, 57, 57);
+}
+
+.input-post {
+    display: block;
+    padding: 0 5px;
+    width: 85%;
+    resize: none;
+    outline: none;
+    border: none;
+}
+.panel-check {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 13%;
+    margin: 0 3%;
+}
+
+.audio-check {
+    cursor: pointer;
+    display: block;
+    width: 35px;
+    height: 35px;
+    border: 1.5px solid rgb(62, 57, 57);
+    border-radius: 50%;
+    background-image: url(../img/microphone.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 80%;
+}
+
+.video-check {
+    cursor: pointer;
+    display: block;
+    width: 35px;
+    height: 35px;
+    border: 1.5px solid rgb(62, 57, 57);
+    border-radius: 50%;
+    background-image: url(../img/video_camera.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 75%;
+}
+
+.panel-record {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 13%;
+    margin: 0 3%;
+}
+
+.record {
+    cursor: pointer;
+    display: block;
+    width: 35px;
+    height: 35px;
+    border: 1.5px solid rgb(62, 57, 57);
+    border-radius: 50%;
+    background-image: url(../img/check.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 70%;
+}
+
+.stop {
+    cursor: pointer;
+    display: block;
+    width: 35px;
+    height: 35px;
+    border: 1.5px solid rgb(62, 57, 57);
+    border-radius: 50%;
+    background-image: url(../img/close.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 55%;
+}
+
+form {
+    position: absolute;
+    width: 40%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 2%;
+    border: 1.5px solid rgb(62, 57, 57);
+    border-radius: 15px;
+    background-color: white;
+    z-index: 1000;
+}
+
+.text-form {
+    margin-top: 0;
+}
+
+input {
+    width: 99%;
+    height: 50px;
+    outline: none;
+    border: 1.5px solid rgb(62, 57, 57);
+}
+
+.control-form {
+    display: flex;
+    flex-grow: 1;
+    justify-content: end;
+    margin-top: 4%;
+}
+
+.validation {
+    color: red;
+}
+
+.ok, .cancel {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20%;
+    height: 60px;
+    margin-left: 10%;
+    border: 1.5px solid rgb(62, 57, 57);
+    border-radius: 15px;
+}
+
+.invisible {
+    display: none;
+}

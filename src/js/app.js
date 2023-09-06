@@ -1,5 +1,9 @@
-import Timeline from './Timeline';
+import Controller from "./Controller";
 
-const app = new Timeline();
+const container = document.querySelector(".container");
 
-app.init();
+document.addEventListener("DOMContentLoaded", () => {
+  const controller = new Controller(container);
+
+  container.addEventListener("click", controller.onClick);
+});

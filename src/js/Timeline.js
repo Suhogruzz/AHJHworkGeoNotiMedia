@@ -1,212 +1,80 @@
-/* eslint-disable no-return-assign */
-
 export default class Timeline {
-  init() {
-    this.renderTimeline();
-  }
-
-  renderTimeline() {
-    this.timeline = document.createElement('div');
-    this.timeline.classList.add('timeline');
-    this.container = document.createElement('div');
-    this.container.classList.add('container');
-    this.timeline.appendChild(this.container);
-    this.messageForm = document.createElement('form');
-    this.messageForm.classList.add('message-form');
-    this.messageForm.innerHTML = '<input id = \'message-input\' placeholder = \'Введите текст, запишите видео или аудио\'>';
-    this.messageForm.innerHTML += '<div class = \'record-audio\'> </div> <div class = \'record-video\'> </div>';
-    this.timeline.appendChild(this.messageForm);
-    this.askPosition = document.createElement('form');
-    this.askPosition.classList.add('ask-position');
-    // eslint-disable-next-line max-len
-    this.askPosition.innerHTML = '<div> К сожалению, что-то пошло не так <br> Пожалуйста, введите ваши координаты вручную <br> Широта и долгота через запятую </div> <input id = \'ask-input\'> <div class = \'btn-group\'> <button class = \'btn cancel-btn\'> Отмена </button> <button class = \'btn ok-btn\'> OK </button></div>';
-    this.invalidMessage = document.createElement('div');
-    this.invalidMessage.classList.add('invalid-message');
-    this.invalidMessage.innerText = 'Координаты невалидны';
-    document.querySelector('body').appendChild(this.timeline);
-    this.noAudio = document.createElement('div');
-    this.noAudio.classList.add('no-audio');
-    this.noAudio.innerHTML = '<div class = \'no-audio-text\'> К сожалению, запись аудио невозможна, купите микрофон или дайте разрешение на использование звукозаписи </div> <button class = \'btn cancel-btn\'> OK </button>';
-    this.noAudio.querySelector('.btn').onclick = () => this.noAudio.style.display = 'none';
-    this.timeline.appendChild(this.noAudio);
-    this.messageForm.addEventListener('submit', (evt) => {
-      evt.preventDefault();
-      this.publishTextMessage();
-    });
-    this.messageForm.querySelector('.record-audio').addEventListener('click', () => {
-      this.createAudio();
-    });
-    this.messageForm.querySelector('.record-video').addEventListener('click', () => {
-      this.createVideo();
-    });
-  }
-
-  getPosition() {
-    navigator.geolocation.getCurrentPosition((position) => (
-      this.position = {
-        latitude: position.coords.latitude,
-        longtitude: position.coords.longitude,
-      }), () => this.position = null);
-  }
-
-  createTextMessage(text, latitude, longtitude) {
-    const message = document.createElement('div');
-    message.classList.add('message');
-    message.innerHTML = `<div class = 'message-header'> ${new Date().toLocaleDateString()}, ${new Date().toLocaleTimeString()} </div> <div class = 'message-text'> ${text} </div> <div class = 'position'> 📍 ${latitude}, ${longtitude} </div>`;
-    this.container.appendChild(message);
-    document.querySelector('#message-input').value = '';
-  }
-
-  publishTextMessage() {
-    this.getPosition();
-    setTimeout(() => {
-      this.text = document.querySelector('#message-input').value;
-      if (!this.text) {
-        return;
-      }
-      if (this.position) {
-        this.createTextMessage(this.text, this.position.latitude, this.position.longtitude);
-      } else {
-        this.timeline.appendChild(this.askPosition);
-        this.getManualPosition();
-      }
-    }, 3000);
-  }
-
-  getManualPosition() {
-    this.askPosition.querySelector('#ask-input').addEventListener('input', () => {
-      if (document.querySelector('.invalid-message')) {
-        this.invalidMessage.remove();
-      }
-    });
-    this.askPosition.querySelector('.ok-btn').onclick = (evt) => {
-      evt.preventDefault();
-      const coords = this.askPosition.querySelector('#ask-input').value;
-      if (this.verifyCoords(coords)) {
-        this.askPosition.remove();
-        this.createTextMessage(this.text, this.position.latitude, this.position.longitude);
-      } else {
-        this.askPosition.appendChild(this.invalidMessage);
-      }
-    };
-    this.askPosition.querySelector('.cancel-btn').addEventListener('click', (evt) => {
-      evt.preventDefault();
-      this.askPosition.remove();
-    });
-  }
-
-  verifyCoords(coords) {
-    if (/^\[([-+]?)([\d]{1,2})(((\.)(\d+)(,)))(\s*)(([-+]?)([\d]{1,3})((\.)(\d+))?)\]$/.test(coords)
-        || /^([-+]?)([\d]{1,2})(((\.)(\d+)(,)))(\s*)(([-+]?)([\d]{1,3})((\.)(\d+))?)$/.test(coords)) {
-      let coordinates = coords.replace('[', '');
-      coordinates = coordinates.split(',');
-      // eslint-disable-next-line no-console
-      this.position = {
-        latitude: Number.parseFloat(coordinates[0]),
-        longitude: Number.parseFloat(coordinates[1]),
-      };
-
-      return true;
-    } return false;
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  recorderTimer(element) {
-    let minutes = 0;
-    let seconds = 0;
-    setInterval(() => {
-      seconds += 1;
-      if (seconds === 60) {
-        minutes += 1;
-        seconds = 0;
-      }
-      if (seconds < 10) {
-        // eslint-disable-next-line no-param-reassign
-        element.innerText = `${minutes}:0${seconds}`;
-        return;
-      }
-      // eslint-disable-next-line no-param-reassign
-      element.innerText = `${minutes}:${seconds}`;
-    }, 1000);
-  }
-
-  async createAudio() {
-    if (!navigator.mediaDevices) {
-      this.noAudio.style.display = 'block';
+    #element;
+    constructor(element) {
+      this.#element = element;
+      this.postsList = null;
     }
-    try {
-      this.stream = await navigator.mediaDevices.getUserMedia({
-        audio: true,
-        video: false,
+  
+    #innerHtmlTimeLine() {
+      return `
+          <div class="ruler"></div>
+          <ul class="posts"></ul>
+          <div class="input-panel">
+              <textarea class="input-post" placeholder="Введите текст"></textarea>
+              <div class="panel-check">
+                <div class="audio-check"></div>
+                <div class="video-check"></div>
+              </div>
+          </div>
+      `;
+    }
+  
+    bindToDom() {
+      const timeLineHtml = this.#innerHtmlTimeLine();
+      this.#element.insertAdjacentHTML("afterbegin", timeLineHtml);
+  
+      this.posts = this.#element.querySelector(".posts");
+      this.inputPanel = this.#element.querySelector(".input-panel");
+      this.inputPost = this.#element.querySelector(".input-post");
+      this.panelCheck = this.#element.querySelector(".panel-check");
+      this.audioCheck = this.#element.querySelector(".audio-check");
+      this.videoCheck = this.#element.querySelector(".video-check");
+  
+      this.addPosts();
+    }
+  
+    #removePosts() {
+      [...this.posts.querySelectorAll(".post")].forEach((el) => el.remove());
+    }
+  
+    #innerHtmlPost(objectPost) {
+      let content = null;
+      if (objectPost.text) {
+        content = `<p class="content">${objectPost.text}</p>`;
+      } else if (objectPost.audio) {
+        content = `<audio class="audio" controls src="${URL.createObjectURL(
+          objectPost.audio
+        )}"></audio>`;
+      } else if (objectPost.video) {
+        content = `<div class="videoblock">
+          <video class="video" controls src="${URL.createObjectURL(
+            objectPost.video
+          )}"></video>
+        </div>`;
+      }
+  
+      const html = `
+          <li class="post">
+              ${content}
+              <div class="time">${objectPost.time}</div>
+              <div class="geolocation">[${objectPost.geolocation.latitude}, ${objectPost.geolocation.longitude}]</div>
+              <div class="geolocation-icon"></div>
+              <div class="ruler-mark"></div>
+          </li>
+      `;
+      return html;
+    }
+  
+    addPosts() {
+      this.#removePosts();
+      if (this.postsList.length === 0) return;
+      this.postsList.forEach((el) => {
+        const postHtml = this.#innerHtmlPost(el);
+        this.posts.insertAdjacentHTML("afterbegin", postHtml);
       });
-    } catch (e) {
-      this.noAudio.style.display = 'block';
-      return;
     }
-    this.audioRecorder = document.createElement('div');
-    this.audioRecorder.classList.add('audio-recorder');
-    this.audioRecorder.innerHTML = '<div class = \'save-record\'> </div> <div class = \'record-timer\'> 0:00 </div> <div class = \'cancel-record\'></div>';
-    const recorder = new MediaRecorder(this.stream);
-    this.chunks = [];
-    recorder.addEventListener('start', () => {
-      this.messageForm.appendChild(this.audioRecorder);
-      this.recorderTimer(document.querySelector('.record-timer'));
-    });
-    recorder.addEventListener('dataavailable', (evt) => {
-      this.chunks.push(evt.data);
-    });
-    recorder.addEventListener('stop', () => {
-      this.sourse = URL.createObjectURL(this.chunks[0]);
-      const text = `<audio controls src = '${this.sourse}'> </audio>`;
-      this.getPosition();
-      setTimeout(() => {
-        this.createTextMessage(text, this.position.latitude, this.position.longtitude);
-      }, 4000);
-    });
-    recorder.start();
-    this.audioRecorder.querySelector('.save-record').addEventListener('click', () => {
-      this.audioRecorder.remove();
-      recorder.stop();
-    });
+  
+    visiblePanelCheck() {
+      this.panelCheck.classList.toggle("invisible");
+    }
   }
-
-  async createVideo() {
-    if (!navigator.mediaDevices) {
-      this.noAudio.style.display = 'block';
-    }
-    try {
-      this.stream = await navigator.mediaDevices.getUserMedia({
-        audio: true,
-        video: true,
-      });
-    } catch (e) {
-      this.noAudio.style.display = 'block';
-      return;
-    }
-    this.audioRecorder = document.createElement('div');
-    this.audioRecorder.classList.add('audio-recorder');
-    this.audioRecorder.innerHTML = '<div class = \'save-record\'> </div> <div class = \'record-timer\'> 0:00 </div> <div class = \'cancel-record\'></div>';
-    const recorder = new MediaRecorder(this.stream);
-    this.chunks = [];
-    recorder.addEventListener('start', () => {
-      this.messageForm.appendChild(this.audioRecorder);
-      this.recorderTimer(document.querySelector('.record-timer'));
-    });
-    recorder.addEventListener('dataavailable', (evt) => {
-      this.chunks.push(evt.data);
-    });
-    recorder.addEventListener('stop', () => {
-      this.sourse = URL.createObjectURL(this.chunks[0]);
-      const text = `<video width = '300' height = '200' controls src = '${this.sourse}'> </video>`;
-      this.getPosition();
-      setTimeout(() => {
-        this.createTextMessage(text, this.position.latitude, this.position.longtitude);
-      }, 4000);
-    });
-    recorder.start();
-    this.audioRecorder.querySelector('.save-record').addEventListener('click', () => {
-      this.audioRecorder.remove();
-      recorder.stop();
-    });
-  }
-}
